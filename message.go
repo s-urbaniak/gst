@@ -7,7 +7,9 @@ package gst
 import "C"
 
 import (
+	"fmt"
 	"unsafe"
+
 	"github.com/ziutek/glib"
 )
 
@@ -33,14 +35,22 @@ const (
 	MESSAGE_ELEMENT          = MessageType(C.GST_MESSAGE_ELEMENT)
 	MESSAGE_SEGMENT_START    = MessageType(C.GST_MESSAGE_SEGMENT_START)
 	MESSAGE_SEGMENT_DONE     = MessageType(C.GST_MESSAGE_SEGMENT_DONE)
-	MESSAGE_DURATION         = MessageType(C.GST_MESSAGE_DURATION)
+	MESSAGE_DURATION_CHANGED = MessageType(C.GST_MESSAGE_DURATION_CHANGED)
 	MESSAGE_LATENCY          = MessageType(C.GST_MESSAGE_LATENCY)
 	MESSAGE_ASYNC_START      = MessageType(C.GST_MESSAGE_ASYNC_START)
 	MESSAGE_ASYNC_DONE       = MessageType(C.GST_MESSAGE_ASYNC_DONE)
 	MESSAGE_REQUEST_STATE    = MessageType(C.GST_MESSAGE_REQUEST_STATE)
 	MESSAGE_STEP_START       = MessageType(C.GST_MESSAGE_STEP_START)
 	MESSAGE_QOS              = MessageType(C.GST_MESSAGE_QOS)
-	//MESSAGE_PROGRESS         = MessageType(C.GST_MESSAGE_PROGRESS)
+	MESSAGE_PROGRESS         = MessageType(C.GST_MESSAGE_PROGRESS)
+	MESSAGE_TOC              = MessageType(C.GST_MESSAGE_TOC)
+	MESSAGE_RESET_TIME       = MessageType(C.GST_MESSAGE_RESET_TIME)
+	MESSAGE_STREAM_START     = MessageType(C.GST_MESSAGE_STREAM_START)
+	MESSAGE_NEED_CONTEXT     = MessageType(C.GST_MESSAGE_NEED_CONTEXT)
+	MESSAGE_HAVE_CONTEXT     = MessageType(C.GST_MESSAGE_HAVE_CONTEXT)
+	MESSAGE_EXTENDED         = MessageType(C.GST_MESSAGE_EXTENDED)
+	MESSAGE_DEVICE_ADDED     = MessageType(C.GST_MESSAGE_DEVICE_ADDED)
+	MESSAGE_DEVICE_REMOVED   = MessageType(C.GST_MESSAGE_DEVICE_REMOVED)
 	MESSAGE_ANY              = MessageType(C.GST_MESSAGE_ANY)
 )
 
@@ -84,8 +94,8 @@ func (t MessageType) String() string {
 		return "MESSAGE_SEGMENT_START"
 	case MESSAGE_SEGMENT_DONE:
 		return "MESSAGE_SEGMENT_DONE"
-	case MESSAGE_DURATION:
-		return "MESSAGE_DURATION"
+	case MESSAGE_DURATION_CHANGED:
+		return "MESSAGE_DURATION_CHANGED"
 	case MESSAGE_LATENCY:
 		return "MESSAGE_LATENCY"
 	case MESSAGE_ASYNC_START:
@@ -98,12 +108,28 @@ func (t MessageType) String() string {
 		return "MESSAGE_STEP_START"
 	case MESSAGE_QOS:
 		return "MESSAGE_QOS"
-	//case MESSAGE_PROGRESS:
-	//	return "MESSAGE_PROGRESS"
+	case MESSAGE_PROGRESS:
+		return "MESSAGE_PROGRESS"
 	case MESSAGE_ANY:
 		return "MESSAGE_ANY"
+	case MESSAGE_TOC:
+		return "MESSAGE_TOC"
+	case MESSAGE_RESET_TIME:
+		return "MESSAGE_RESET_TIME"
+	case MESSAGE_STREAM_START:
+		return "MESSAGE_STREAM_START"
+	case MESSAGE_NEED_CONTEXT:
+		return "MESSAGE_NEED_CONTEXT"
+	case MESSAGE_HAVE_CONTEXT:
+		return "MESSAGE_HAVE_CONTEXT"
+	case MESSAGE_EXTENDED:
+		return "MESSAGE_EXTENDED"
+	case MESSAGE_DEVICE_ADDED:
+		return "MESSAGE_DEVICE_ADDED"
+	case MESSAGE_DEVICE_REMOVED:
+		return "MESSAGE_DEVICE_REMOVED"
 	}
-	panic("Unknown value of gst.MessageType")
+	return fmt.Sprintf("unknown message type %b", t)
 }
 
 type Message C.GstMessage
@@ -144,7 +170,7 @@ func (m *Message) GetSrc() *GstObj {
 
 func (m *Message) ParseError() (err *glib.Error, debug string) {
 	var d *C.gchar
-	var	e, ret_e *C.GError
+	var e, ret_e *C.GError
 
 	C.gst_message_parse_error(m.g(), &e, &d)
 	defer C.free(unsafe.Pointer(e))
