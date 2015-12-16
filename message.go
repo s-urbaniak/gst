@@ -182,3 +182,8 @@ func (m *Message) ParseError() (err *glib.Error, debug string) {
 	err = (*glib.Error)(unsafe.Pointer(ret_e))
 	return
 }
+
+func (m *Message) ParseStateChanged() (new, old, pending State) {
+	C.gst_message_parse_state_changed(m.g(), (&old).g(), (&new).g(), (&pending).g())
+	return
+}
