@@ -13,6 +13,38 @@ import (
 	"github.com/ziutek/glib"
 )
 
+type StreamStatusType C.GstStreamStatusType
+
+const (
+	STREAM_CREATE  = StreamStatusType(C.GST_STREAM_STATUS_TYPE_CREATE)
+	STREAM_ENTER   = StreamStatusType(C.GST_STREAM_STATUS_TYPE_ENTER)
+	STREAM_LEAVE   = StreamStatusType(C.GST_STREAM_STATUS_TYPE_LEAVE)
+	STREAM_DESTROY = StreamStatusType(C.GST_STREAM_STATUS_TYPE_DESTROY)
+	STREAM_START   = StreamStatusType(C.GST_STREAM_STATUS_TYPE_START)
+	STREAM_PAUSE   = StreamStatusType(C.GST_STREAM_STATUS_TYPE_PAUSE)
+	STREAM_STOP    = StreamStatusType(C.GST_STREAM_STATUS_TYPE_STOP)
+)
+
+func (t StreamStatusType) String() string {
+	switch t {
+	case STREAM_CREATE:
+		return "STREAM_CREATE"
+	case STREAM_ENTER:
+		return "STREAM_ENTER"
+	case STREAM_LEAVE:
+		return "STREAM_LEAVE"
+	case STREAM_DESTROY:
+		return "STREAM_DESTROY"
+	case STREAM_START:
+		return "STREAM_START"
+	case STREAM_PAUSE:
+		return "STREAM_PAUSE"
+	case STREAM_STOP:
+		return "STREAM_STOP"
+	}
+	return fmt.Sprintf("unknown stream status %v", t)
+}
+
 type MessageType C.GstMessageType
 
 const (
@@ -186,4 +218,12 @@ func (m *Message) ParseError() (err *glib.Error, debug string) {
 func (m *Message) ParseStateChanged() (new, old, pending State) {
 	C.gst_message_parse_state_changed(m.g(), (&old).g(), (&new).g(), (&pending).g())
 	return
+}
+
+func (m *Message) ParseStreamStatus() StreamStatusType {
+	var t StreamStatusType
+
+	C.gst_message_parse_stream_status(m.g(), (*C.GstStreamStatusType)(&t), nil)
+
+	return t
 }
