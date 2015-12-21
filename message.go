@@ -202,16 +202,14 @@ func (m *Message) GetSrc() *GstObj {
 
 func (m *Message) ParseError() (err *glib.Error, debug string) {
 	var d *C.gchar
-	var e, ret_e *C.GError
+	var e *C.GError
 
 	C.gst_message_parse_error(m.g(), &e, &d)
-	defer C.free(unsafe.Pointer(e))
 	defer C.free(unsafe.Pointer(d))
 
 	debug = C.GoString((*C.char)(d))
-	ret_e = new(C.GError)
-	*ret_e = *e
-	err = (*glib.Error)(unsafe.Pointer(ret_e))
+	err = (*glib.Error)(unsafe.Pointer(e))
+
 	return
 }
 
