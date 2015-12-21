@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ziutek/glib"
-	"github.com/ziutek/gst"
+	"github.com/s-urbaniak/glib"
+	"github.com/s-urbaniak/gst"
 )
 
 func checkElem(e *gst.Element, name string) {

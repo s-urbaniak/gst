@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/ziutek/glib"
+	"github.com/s-urbaniak/glib"
 )
 
 type StreamStatusType C.GstStreamStatusType

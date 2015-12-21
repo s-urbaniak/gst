@@ -12,7 +12,8 @@ import "C"
 
 import (
 	"unsafe"
-	"github.com/ziutek/glib"
+
+	"github.com/s-urbaniak/glib"
 )
 
 type Caps C.GstCaps
@@ -66,4 +67,3 @@ func CapsFromString(s string) *Caps {
 	defer C.free(unsafe.Pointer(cs))
 	return (*Caps)(C.gst_caps_from_string(cs))
 }
-
