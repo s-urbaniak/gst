@@ -218,10 +218,7 @@ func (m *Message) ParseStateChanged() (new, old, pending State) {
 	return
 }
 
-func (m *Message) ParseStreamStatus() StreamStatusType {
-	var t StreamStatusType
-
+func (m *Message) ParseStreamStatus() (t StreamStatusType) {
 	C.gst_message_parse_stream_status(m.g(), (*C.GstStreamStatusType)(&t), nil)
-
-	return t
+	return
 }
