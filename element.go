@@ -150,16 +150,23 @@ func (e *Element) GetBus() *Bus {
 	return b
 }
 
+func (e *Element) SendEvent(evt *Event) bool {
+	return C.gst_element_send_event(e.g(), evt.g()) != 0
+}
+
 // TODO: Move ElementFactoryMake to element_factory.go
 func ElementFactoryMake(factory_name, name string) *Element {
 	fn := (*C.gchar)(C.CString(factory_name))
 	defer C.free(unsafe.Pointer(fn))
+
 	n := (*C.gchar)(C.CString(name))
 	defer C.free(unsafe.Pointer(n))
+
 	ge := C.gst_element_factory_make(fn, n)
 	if ge == nil {
 		return nil
 	}
+
 	e := new(Element)
 	e.SetPtr(glib.Pointer(ge))
 	return e
