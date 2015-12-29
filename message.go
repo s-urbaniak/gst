@@ -222,3 +222,11 @@ func (m *Message) ParseStreamStatus() (t StreamStatusType) {
 	C.gst_message_parse_stream_status(m.g(), (*C.GstStreamStatusType)(&t), nil)
 	return
 }
+
+func (m *Message) ParseDeviceAdded() *Device {
+	var gstDev *C.GstDevice
+	C.gst_message_parse_device_added(m.g(), &gstDev)
+	dev := new(Device)
+	dev.SetPtr(glib.Pointer(gstDev))
+	return dev
+}

@@ -56,6 +56,10 @@ func NewCapsEmpty() *Caps {
 	return (*Caps)(C.gst_caps_new_empty())
 }
 
+func NewCapsEmptySimple(media_type string) *Caps {
+	return (*Caps)(C.gst_caps_new_empty_simple(C.CString(media_type)))
+}
+
 func NewCapsSimple(media_type string, fields glib.Params) *Caps {
 	c := NewCapsEmpty()
 	c.AppendStructure(media_type, fields)
