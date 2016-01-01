@@ -22,6 +22,10 @@ func (d *Device) GetDisplayName() string {
 	return C.GoString((*C.char)(C.gst_device_get_display_name(d.g())))
 }
 
+func (d *Device) GetDeviceClass() string {
+	return C.GoString((*C.char)(C.gst_device_get_device_class(d.g())))
+}
+
 func (d *Device) GetProperties() (string, glib.Params) {
 	s := C.gst_device_get_properties(d.g())
 	defer C.gst_structure_free(s)
