@@ -47,17 +47,17 @@ func (dm *DeviceMonitor) GetBus() *Bus {
 	return b
 }
 
-func (dm *DeviceMonitor) GetDevices() []Device {
+func (dm *DeviceMonitor) GetDevices() []*Device {
 	l := glib.List{}
 	l.SetPtr((glib.Pointer)(C.gst_device_monitor_get_devices(dm.g())))
 	defer l.Free()
 
-	ds := make([]Device, l.Length(), l.Length())
+	ds := make([]*Device, l.Length(), l.Length())
 	var i uint
 	for ; i < l.Length(); i++ {
 		d := Device{}
 		d.SetPtr(l.Nth(i))
-		ds[i] = d
+		ds[i] = &d
 	}
 
 	return ds
